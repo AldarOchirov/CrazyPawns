@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CrazyPawn
+namespace CrazyPawn.GameAssets.Templates
 {
     [CreateAssetMenu(menuName = "CrazyPawn/Settings", fileName = "CrazyPawnSettings")]
     public class CrazyPawnSettings : ScriptableObject
