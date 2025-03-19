@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7296c56a903dad64992731afe5ffac5b, type: 3}
-  m_Name: Installer
+  m_Script: {fileID: 11500000, guid: c71dede01c8074f4584ea753b19d62a8, type: 3}
+  m_Name: ConfigsInstaller
   m_EditorClassIdentifier: 
-  _board: {fileID: 5299450287193941097, guid: 3fb9b8137bb22d0429b96f1f3e6e9996, type: 3}
+  _boardConfig: {fileID: 11400000, guid: 668c0f93545fa3a4391b620c4799e604, type: 2}
