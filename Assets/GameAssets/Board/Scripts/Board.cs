@@ -1,4 +1,5 @@
 using CrazyPawns.GameAssets.Cell;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -19,6 +20,8 @@ namespace CrazyPawns.GameAssets.Board
         private Material _whiteCellMaterial;
 
         private Cell.Cell[,] _cells;
+
+        public List<Vector3> CellsPositions { get; private set; } = new();
 
         private void Start()
         {
@@ -42,6 +45,7 @@ namespace CrazyPawns.GameAssets.Board
                     var xPos = CalcPos(i);
                     var zPos = CalcPos(j);
                     cell.transform.position = new Vector3(xPos, 0.0f, zPos);
+                    CellsPositions.Add(cell.transform.position);
                     cell.transform.parent = transform;
                     _cells[i,j] = cell;
                 }

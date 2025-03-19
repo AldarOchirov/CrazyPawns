@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: ConfigsInstaller
   m_EditorClassIdentifier: 
   _boardConfig: {fileID: 11400000, guid: 668c0f93545fa3a4391b620c4799e604, type: 2}
+  _pawnControllerConfig: {fileID: 11400000, guid: d0f48ad0bd073a94db42df853a9b02d0,
+    type: 2}

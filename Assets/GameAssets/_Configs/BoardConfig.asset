@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0901e3aa272f2b54fb0c775832511696, type: 3}
   m_Name: BoardConfig
   m_EditorClassIdentifier: 
-  _checkerboardSize: 4
+  _checkerboardSize: 12
   _cellSize: 1.5
   _blackCellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _whiteCellColor: {r: 0, g: 1, b: 0, a: 1}

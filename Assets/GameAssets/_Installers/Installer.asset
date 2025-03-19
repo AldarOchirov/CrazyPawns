@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _board: {fileID: 5299450287193941097, guid: 3fb9b8137bb22d0429b96f1f3e6e9996, type: 3}
   _cell: {fileID: 5089229255800051666, guid: 93813a1172b775941b356d8285b5dc98, type: 3}
+  _pawnController: {fileID: 5041220931408638924, guid: f693eb87b530ff2408c1431d3af2d127,
+    type: 3}
+  _pawn: {fileID: 4844751287183733226, guid: 079773033224fbf4787e5f8c3b197cd2, type: 3}
