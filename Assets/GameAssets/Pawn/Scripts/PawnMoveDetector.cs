@@ -6,6 +6,7 @@ namespace CrazyPawns.GameAssets.Pawn
     public class PawnMoveDetector : MonoBehaviour
     {
         public event Action<float> OnMove;
+        public event Action OnDragEnd;
 
         private Camera _camera;
         private float _zCameraDistance;
@@ -19,6 +20,11 @@ namespace CrazyPawns.GameAssets.Pawn
         private void OnMouseDrag()
         {
             OnMove?.Invoke(_zCameraDistance);
+        }
+
+        private void OnMouseUp()
+        {
+            OnDragEnd?.Invoke();
         }
     }
 }

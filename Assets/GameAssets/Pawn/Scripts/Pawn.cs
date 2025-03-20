@@ -6,6 +6,7 @@ namespace CrazyPawns.GameAssets.Pawn
     public class Pawn : MonoBehaviour
     {
         public event Action<Pawn, float> OnMove;
+        public event Action<Pawn> OnDragEnd;
 
         [SerializeField]
         private PawnMoveDetector _moveDetector;
@@ -37,6 +38,7 @@ namespace CrazyPawns.GameAssets.Pawn
         public void Reinitialize(PawnConfig config)
         {
             _moveDetector.OnMove += Move;
+            _moveDetector.OnDragEnd += DragEnd;
             CanBeDeleted = false;
         }
 
@@ -45,11 +47,17 @@ namespace CrazyPawns.GameAssets.Pawn
             OnMove?.Invoke(this, zDistance);
         }
 
+        private void DragEnd()
+        {
+            OnDragEnd?.Invoke(this);
+        }
+
         private void ChangeMaterial() => _cubeMeshRenderer.material = _canBeDeleted ? _deleteMaterial : _defaultMaterial;
 
         private void OnDestroy()
         {
             _moveDetector.OnMove -= Move;
+            _moveDetector.OnDragEnd -= DragEnd;
         }
     }
 }

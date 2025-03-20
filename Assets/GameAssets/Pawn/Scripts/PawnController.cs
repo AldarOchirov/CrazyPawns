@@ -41,6 +41,7 @@ namespace CrazyPawns.GameAssets.Pawn
                 var randomIndex = Random.Range(0, positionsInCircle.Count);
                 pawn.transform.position = positionsInCircle[randomIndex];
                 pawn.OnMove += OnPawnMove;
+                pawn.OnDragEnd += OnPawnDragEnd;
                 _pawns.Add(pawn);
             }
         }
@@ -49,7 +50,7 @@ namespace CrazyPawns.GameAssets.Pawn
 
         private void OnPawnMove(Pawn pawn, float zDistance)
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = _camera.ScreenPointToRay(Input.mousePosition);
 
             float distance;
             if (_board.Plane.Raycast(ray, out distance))
@@ -59,11 +60,28 @@ namespace CrazyPawns.GameAssets.Pawn
             }
         }
 
+        private void OnPawnDragEnd(Pawn pawn)
+        {
+            if (pawn.CanBeDeleted)
+            {
+                RemovePawnListeners(pawn);
+                _pawnPool.Despawn(pawn);
+                _pawns.Remove(pawn);
+                pawn.transform.parent = transform;
+            }
+        }
+
+        private void RemovePawnListeners(Pawn pawn)
+        {
+            pawn.OnMove -= OnPawnMove;
+            pawn.OnDragEnd -= OnPawnDragEnd;
+        }
+
         private void OnDestroy()
         {
             foreach (var pawn in _pawns)
             {
-                pawn.OnMove -= OnPawnMove;
+                RemovePawnListeners(pawn);
             }
         }
     }
