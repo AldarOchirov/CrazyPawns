@@ -55,6 +55,7 @@ namespace CrazyPawns.GameAssets.Pawn
             if (_board.Plane.Raycast(ray, out distance))
             {
                 pawn.transform.position = ray.GetPoint(distance);
+                pawn.CanBeDeleted = Mathf.Abs(pawn.transform.position.x) > _board.Bound || Mathf.Abs(pawn.transform.position.z) > _board.Bound;
             }
         }
 

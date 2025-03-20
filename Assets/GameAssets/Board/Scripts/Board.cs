@@ -28,6 +28,8 @@ namespace CrazyPawns.GameAssets.Board
 
         public Plane Plane { get; private set; }
 
+        public float Bound { get; private set; }
+
         private void Start()
         {
             Init();
@@ -37,6 +39,7 @@ namespace CrazyPawns.GameAssets.Board
         {
             Plane = new Plane(_normal, 0.0f);
             GenerateCells();
+            Bound = _config.CheckerBoardSize * _config.CellSize / 2;
         }
 
         private void GenerateCells()
