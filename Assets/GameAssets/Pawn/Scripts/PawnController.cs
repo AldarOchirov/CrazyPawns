@@ -17,6 +17,7 @@ namespace CrazyPawns.GameAssets.Pawn
         private Board.Board _board;
 
         private List<Pawn> _pawns = new();
+        private Camera _camera;
 
         private void Start()
         {
@@ -25,6 +26,7 @@ namespace CrazyPawns.GameAssets.Pawn
 
         private void Init()
         {
+            _camera = Camera.main;
             GeneratePawns();
         }
 
@@ -38,10 +40,30 @@ namespace CrazyPawns.GameAssets.Pawn
                 
                 var randomIndex = Random.Range(0, positionsInCircle.Count);
                 pawn.transform.position = positionsInCircle[randomIndex];
+                pawn.OnMove += OnPawnMove;
                 _pawns.Add(pawn);
             }
         }
 
         private bool CheckDistanceInCircle(Vector3 pos, float radius) => pos.x * pos.x + pos.y * pos.y + pos.z * pos.z < radius * radius;
+
+        private void OnPawnMove(Pawn pawn, float zDistance)
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            float distance;
+            if (_board.Plane.Raycast(ray, out distance))
+            {
+                pawn.transform.position = ray.GetPoint(distance);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var pawn in _pawns)
+            {
+                pawn.OnMove -= OnPawnMove;
+            }
+        }
     }
 }

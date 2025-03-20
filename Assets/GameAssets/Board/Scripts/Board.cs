@@ -19,9 +19,14 @@ namespace CrazyPawns.GameAssets.Board
         [SerializeField]
         private Material _whiteCellMaterial;
 
+        [SerializeField]
+        private Vector3 _normal = Vector3.up;
+
         private Cell.Cell[,] _cells;
 
         public List<Vector3> CellsPositions { get; private set; } = new();
+
+        public Plane Plane { get; private set; }
 
         private void Start()
         {
@@ -30,6 +35,7 @@ namespace CrazyPawns.GameAssets.Board
 
         private void Init()
         {
+            Plane = new Plane(_normal, 0.0f);
             GenerateCells();
         }
 
