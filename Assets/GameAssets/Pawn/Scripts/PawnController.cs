@@ -18,9 +18,6 @@ namespace CrazyPawns.GameAssets.Pawn
         [Inject]
         private Board.Board _board;
 
-        [Inject]
-        private ClickHandler _clickHandler;
-
         [SerializeField]
         private Transform _pawnsTransform;
 
@@ -39,7 +36,6 @@ namespace CrazyPawns.GameAssets.Pawn
         private void Init()
         {
             _camera = Camera.main;
-            _clickHandler.OnDeactivated += StopHighlightSockets;
             GeneratePawns();
         }
 
@@ -57,6 +53,7 @@ namespace CrazyPawns.GameAssets.Pawn
                 pawn.OnDragEnd += OnPawnDragEnd;
                 pawn.OnSocketSelected += SocketSelect;
                 pawn.OnSocketConnected += ConnectSocket;
+                pawn.OnDeactivateSocketHighlight += StopHighlightSockets;
                 _pawns.Add(pawn);
             }
         }
@@ -102,6 +99,7 @@ namespace CrazyPawns.GameAssets.Pawn
             if (_selectedSocketForConnection != null)
             {
                 _lineController.SpawnLine(selectedSocket, _selectedSocketForConnection);
+                StopHighlightSockets();
                 _selectedSocketForConnection = null;
             }
         }
@@ -112,6 +110,7 @@ namespace CrazyPawns.GameAssets.Pawn
             pawn.OnDragEnd -= OnPawnDragEnd;
             pawn.OnSocketSelected -= SocketSelect;
             pawn.OnSocketConnected -= ConnectSocket;
+            pawn.OnDeactivateSocketHighlight -= StopHighlightSockets;
         }
 
         private void OnDestroy()
@@ -120,7 +119,6 @@ namespace CrazyPawns.GameAssets.Pawn
             {
                 RemovePawnListeners(pawn);
             }
-            _clickHandler.OnDeactivated -= StopHighlightSockets;
         }
     }
 }
