@@ -81,6 +81,7 @@ namespace CrazyPawns.GameAssets.Pawn
             if (pawn.CanBeDeleted)
             {
                 RemovePawnListeners(pawn);
+                _lineController.DespawnLines(pawn.Sockets);
                 _pawnPool.Despawn(pawn);
                 _pawns.Remove(pawn);
                 pawn.transform.parent = _pawnsTransform;
@@ -100,10 +101,7 @@ namespace CrazyPawns.GameAssets.Pawn
         {
             if (_selectedSocketForConnection != null)
             {
-                selectedSocket.ConnectedSockets.Add(_selectedSocketForConnection);
-                _selectedSocketForConnection.ConnectedSockets.Add(selectedSocket);
                 _lineController.SpawnLine(selectedSocket, _selectedSocketForConnection);
-
                 _selectedSocketForConnection = null;
             }
         }

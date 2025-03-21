@@ -23,10 +23,25 @@ namespace CrazyPawns.GameAssets.Line
 
         public void UpdateLinePositions(IReadOnlyList<Socket> sockets)
         {
-            var targetLines = _lines.Where(line => 
-                sockets.Any(socket => socket == line.LineConfig.StartSocket || socket == line.LineConfig.EndSocket)).ToList();
+            var targetLines = SelectLines(sockets);
 
             targetLines.ForEach(line => line.UpdateLinePositions());
         }
+
+        public void DespawnLines(IReadOnlyList<Socket> sockets)
+        {
+            var targetLines = SelectLines(sockets);
+
+            foreach (var line in targetLines)
+            {
+                _linePool.Despawn(line);
+                _lines.Remove(line);
+                line.transform.parent = transform;
+            }
+        }
+
+        private List<Line> SelectLines(IReadOnlyList<Socket> sockets) => _lines.Where(line => sockets.Any(socket => CheckSocketInLine(line, socket))).ToList();
+
+        private bool CheckSocketInLine(Line line, Socket socket) => socket == line.LineConfig.StartSocket || socket == line.LineConfig.EndSocket;
     }
 }

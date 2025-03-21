@@ -44,8 +44,6 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
 
         public void Reinitialize() => CanBeDeleted = false;
 
-        public List<Socket> ConnectedSockets { get; set; } = new();
-
         public void Highlight(bool highlight)
         {
             _meshRenderer.material = highlight ? _availableMaterial : _defaultMaterial;
