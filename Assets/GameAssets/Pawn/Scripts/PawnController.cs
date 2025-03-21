@@ -1,3 +1,4 @@
+using CrazyPawns.GameAssets.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace CrazyPawns.GameAssets.Pawn
         [Inject]
         private Board.Board _board;
 
+        [Inject]
+        private ClickHandler _clickHandler;
+
         private List<Pawn> _pawns = new();
         private Camera _camera;
 
@@ -27,6 +31,7 @@ namespace CrazyPawns.GameAssets.Pawn
         private void Init()
         {
             _camera = Camera.main;
+            _clickHandler.OnDeactivated += StopHighlightSockets;
             GeneratePawns();
         }
 
@@ -42,6 +47,7 @@ namespace CrazyPawns.GameAssets.Pawn
                 pawn.transform.position = positionsInCircle[randomIndex];
                 pawn.OnMove += OnPawnMove;
                 pawn.OnDragEnd += OnPawnDragEnd;
+                pawn.OnSocketSelected += SocketSelect;
                 _pawns.Add(pawn);
             }
         }
@@ -71,10 +77,19 @@ namespace CrazyPawns.GameAssets.Pawn
             }
         }
 
+        private void SocketSelect(Pawn selectedPawn, Socket.Socket selectedSocket)
+        {
+            var pawns = _pawns.Where(pawn => pawn != selectedPawn).ToList();
+            pawns.ForEach(pawn => pawn.HighlightSockets(true));
+        }
+
+        private void StopHighlightSockets() => _pawns.ForEach(pawn => pawn.HighlightSockets(false));
+
         private void RemovePawnListeners(Pawn pawn)
         {
             pawn.OnMove -= OnPawnMove;
             pawn.OnDragEnd -= OnPawnDragEnd;
+            pawn.OnSocketSelected -= SocketSelect;
         }
 
         private void OnDestroy()
@@ -83,6 +98,7 @@ namespace CrazyPawns.GameAssets.Pawn
             {
                 RemovePawnListeners(pawn);
             }
+            _clickHandler.OnDeactivated -= StopHighlightSockets;
         }
     }
 }

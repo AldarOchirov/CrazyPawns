@@ -17,14 +17,8 @@ namespace CrazyPawns.GameAssets.Pawn
             _zCameraDistance = _camera.WorldToScreenPoint(transform.position).z;
         }
 
-        private void OnMouseDrag()
-        {
-            OnMove?.Invoke(_zCameraDistance);
-        }
+        private void OnMouseDrag() => OnMove?.Invoke(_zCameraDistance);
 
-        private void OnMouseUp()
-        {
-            OnDragEnd?.Invoke();
-        }
+        private void OnMouseUp() => OnDragEnd?.Invoke();
     }
 }

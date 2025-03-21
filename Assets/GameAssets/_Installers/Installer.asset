@@ -17,3 +17,5 @@ MonoBehaviour:
   _pawnController: {fileID: 5041220931408638924, guid: f693eb87b530ff2408c1431d3af2d127,
     type: 3}
   _pawn: {fileID: 4844751287183733226, guid: 079773033224fbf4787e5f8c3b197cd2, type: 3}
+  _clickHandler: {fileID: 5461226510922396604, guid: 6351e54ea65d0314eb3a958cc8be31ea,
+    type: 3}
