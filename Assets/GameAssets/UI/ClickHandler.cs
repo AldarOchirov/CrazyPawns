@@ -6,10 +6,10 @@ namespace CrazyPawns.GameAssets.UI
 {
     public class ClickHandler : MonoBehaviour
     {
-        public event Action OnDeactivated;
-
         [SerializeField]
         private Button _button;
+
+        private Action _deactivationCallback;
 
         public bool IsActive
         {
@@ -23,12 +23,16 @@ namespace CrazyPawns.GameAssets.UI
             _button.onClick.AddListener(DeactivateButton);
         }
 
-        public void ActivateButton() => IsActive = true;
+        public void ActivateButton(Action callback)
+        {
+            IsActive = true;
+            _deactivationCallback = callback;
+        }
 
         private void DeactivateButton()
         {
             IsActive = false;
-            OnDeactivated?.Invoke();
+            _deactivationCallback?.Invoke();
         }
 
         private void OnDestroy() => _button.onClick?.RemoveAllListeners();

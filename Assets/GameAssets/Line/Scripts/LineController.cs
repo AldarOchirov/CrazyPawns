@@ -15,16 +15,13 @@ namespace CrazyPawns.GameAssets.Line
 
         public void SpawnLine(Socket firstSocket, Socket secondSocket)
         {
-            var line = _linePool.Spawn(new LineConfig(firstSocket, secondSocket));
-            line.transform.parent = transform;
-            line.UpdateLinePositions();
+            var line = _linePool.Spawn(new LineConfig(transform, firstSocket, secondSocket));
             _lines.Add(line);
         }
 
         public void UpdateLinePositions(IReadOnlyList<Socket> sockets)
         {
             var targetLines = SelectLines(sockets);
-
             targetLines.ForEach(line => line.UpdateLinePositions());
         }
 

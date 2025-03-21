@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,11 +6,11 @@ namespace CrazyPawns.GameAssets.Pawn
 {
     public class Pawn : MonoBehaviour
     {
-        public event Action<Pawn, float> OnMove;
-        public event Action<Pawn> OnDragEnd;
-        public event Action<Pawn, Socket.Socket> OnSocketSelected;
-        public event Action<Pawn, Socket.Socket> OnSocketConnected;
-        public event Action OnDeactivateSocketHighlight;
+        public event Action<Pawn> OnMovePawn;
+        public event Action<Pawn> OnMovePawnFinished;
+        public event Action<Pawn, Socket.Socket> OnSocketConnectionStarted;
+        public event Action<Pawn, Socket.Socket> OnSocketConnectionSucceed;
+        public event Action OnSocketConnectionFinished;
 
         [SerializeField]
         private PawnMoveDetector _moveDetector;
@@ -38,7 +37,7 @@ namespace CrazyPawns.GameAssets.Pawn
                 if (_canBeDeleted != value)
                 {
                     _canBeDeleted = value;
-                    ChangeMaterial();
+                    UpdateMaterial();
                 }
             }
         }
@@ -47,43 +46,45 @@ namespace CrazyPawns.GameAssets.Pawn
 
         public void Reinitialize(PawnConfig config)
         {
-            _moveDetector.OnMove += Move;
-            _moveDetector.OnDragEnd += DragEnd;
+            transform.parent = config.Parent;
+            transform.position = config.Position;
+            _moveDetector.OnMove += MovePawn;
+            _moveDetector.OnMoveFinished += MovePawnEnd;
             CanBeDeleted = false;
             foreach (var socket in _sockets)
             {
                 socket.Reinitialize();
-                socket.OnSelect += SocketSelected;
-                socket.OnConnect += SocketConnected;
-                socket.OnDeactivateHighlight += DeactivateSocketHighlight;
+                socket.OnConnectionStarted += SocketConnectionStarted;
+                socket.OnConnectionSucceed += SocketConnectionSucceed;
+                socket.OnConnectionFinished += SocketConnectionFinished;
             }
         }
 
-        private void Move(float zDistance) => OnMove?.Invoke(this, zDistance);
+        public void HighlightSockets(bool highlight) => _sockets.ForEach(socket => socket.Highlight(highlight));
 
-        private void DragEnd() => OnDragEnd?.Invoke(this);
+        private void MovePawn() => OnMovePawn?.Invoke(this);
 
-        private void ChangeMaterial()
+        private void MovePawnEnd() => OnMovePawnFinished?.Invoke(this);
+
+        private void UpdateMaterial()
         {
             _cubeMeshRenderer.material = _canBeDeleted ? _deleteMaterial : _defaultMaterial;
             _sockets.ForEach(socket => socket.CanBeDeleted = _canBeDeleted);
         }
 
-        private void SocketSelected(Socket.Socket socket) => OnSocketSelected?.Invoke(this, socket);
+        private void SocketConnectionStarted(Socket.Socket socket) => OnSocketConnectionStarted?.Invoke(this, socket);
 
-        private void SocketConnected(Socket.Socket socket) => OnSocketConnected?.Invoke(this, socket);
+        private void SocketConnectionSucceed(Socket.Socket socket) => OnSocketConnectionSucceed?.Invoke(this, socket);
 
-        private void DeactivateSocketHighlight() => OnDeactivateSocketHighlight?.Invoke();
-
-        public void HighlightSockets(bool highlight) => _sockets.ForEach(socket => socket.Highlight(highlight));
+        private void SocketConnectionFinished() => OnSocketConnectionFinished?.Invoke();
 
         private void OnDestroy()
         {
-            _moveDetector.OnMove -= Move;
-            _moveDetector.OnDragEnd -= DragEnd;
-            _sockets.ForEach(socket => socket.OnSelect -= SocketSelected);
-            _sockets.ForEach(socket => socket.OnConnect -= SocketConnected);
-            _sockets.ForEach(socket => socket.OnDeactivateHighlight -= DeactivateSocketHighlight);
+            _moveDetector.OnMove -= MovePawn;
+            _moveDetector.OnMoveFinished -= MovePawnEnd;
+            _sockets.ForEach(socket => socket.OnConnectionStarted -= SocketConnectionStarted);
+            _sockets.ForEach(socket => socket.OnConnectionSucceed -= SocketConnectionSucceed);
+            _sockets.ForEach(socket => socket.OnConnectionFinished -= SocketConnectionFinished);
         }
     }
 }

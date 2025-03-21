@@ -11,7 +11,11 @@ namespace CrazyPawns.GameAssets.Line
 
         public LineConfig LineConfig => _config;
 
-        public void Reinitialize(LineConfig config) => _config = config;
+        public void Reinitialize(LineConfig config)
+        {
+            _config = config;
+            UpdateLinePositions();
+        }
 
         public void UpdateLinePositions()
         {

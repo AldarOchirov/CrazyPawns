@@ -1,6 +1,5 @@
 using CrazyPawns.GameAssets.UI;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -11,9 +10,9 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
         private const float ClickDeltaTime = 0.2f;
         private static bool IsDragging = false;
 
-        public event Action<Socket> OnSelect;
-        public event Action<Socket> OnConnect;
-        public event Action OnDeactivateHighlight;
+        public event Action<Socket> OnConnectionStarted;
+        public event Action<Socket> OnConnectionSucceed;
+        public event Action OnConnectionFinished;
 
         [Inject]
         private ClickHandler _clickHandler;
@@ -32,8 +31,6 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
 
         private Camera _camera;
         private bool _canBeDeleted = false;
-        private bool _waitConnection = false;
-
         private float _downClickTime;
 
         public bool CanBeDeleted
@@ -44,28 +41,20 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
                 if (_canBeDeleted != value)
                 {
                     _canBeDeleted = value;
-                    ChangeMaterial();
+                    UpdateMaterial();
                 }
             }
         }
 
-        private void Start()
-        {
-            _camera = Camera.main;
-            _clickHandler.OnDeactivated += DeactivateHighlight;
-        }
+        private void Start() => _camera = Camera.main;
 
         public void Reinitialize() => CanBeDeleted = false;
 
-        public void Highlight(bool highlight)
-        {
-            _meshRenderer.material = highlight ? _availableMaterial : _defaultMaterial;
-            _waitConnection = highlight;
-        }
+        public void Highlight(bool highlight) => _meshRenderer.material = highlight ? _availableMaterial : _defaultMaterial;
 
-        private void ChangeMaterial() => _meshRenderer.material = _canBeDeleted ? _deleteMaterial : _defaultMaterial;
+        private void UpdateMaterial() => _meshRenderer.material = _canBeDeleted ? _deleteMaterial : _defaultMaterial;
 
-        private void DeactivateHighlight() => OnDeactivateHighlight?.Invoke();
+        private void ConnectionFinished() => OnConnectionFinished?.Invoke();
 
         private void OnMouseDown() => _downClickTime = Time.time;
 
@@ -74,7 +63,7 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
             if (Time.time - _downClickTime >= ClickDeltaTime)
             {
                 IsDragging = true;
-                OnSelect?.Invoke(this);
+                OnConnectionStarted?.Invoke(this);
             }
         }
 
@@ -86,27 +75,22 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
 
                 if (Physics.Raycast(ray, out var hit) && hit.transform.TryGetComponent<Socket>(out var socket))
                 {
-                    OnConnect?.Invoke(socket);
+                    OnConnectionSucceed?.Invoke(socket);
                 }
 
-                OnDeactivateHighlight?.Invoke();
+                ConnectionFinished();
                 IsDragging = false;
             }
             else
             {
-                if (_waitConnection)
-                {
-                    OnConnect?.Invoke(this);
-                }
+                OnConnectionSucceed?.Invoke(this);
 
                 if (!_clickHandler.IsActive)
                 {
-                    _clickHandler.ActivateButton();
-                    OnSelect?.Invoke(this);
+                    _clickHandler.ActivateButton(ConnectionFinished);
+                    OnConnectionStarted?.Invoke(this);
                 }
             }
         }
-
-        private void OnDestroy() => _clickHandler.OnDeactivated -= DeactivateHighlight;
     }
 }

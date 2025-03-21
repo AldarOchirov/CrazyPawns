@@ -4,10 +4,14 @@ namespace CrazyPawns.GameAssets.Cell
 {
     public struct CellConfig
     {
+        public Transform Parent;
+        public Vector3 Position;
         public Material Material;
 
-        public CellConfig(Material material)
+        public CellConfig(Transform parent, Vector3 position, Material material)
         {
+            Parent = parent;
+            Position = position;
             Material = material;
         }
     }

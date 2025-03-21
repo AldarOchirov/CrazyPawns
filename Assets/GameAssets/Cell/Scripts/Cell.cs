@@ -9,6 +9,8 @@ namespace CrazyPawns.GameAssets.Cell
 
         public void Reinitialize(CellConfig config)
         {
+            transform.parent = config.Parent;
+            transform.position = config.Position;
             _meshRenderer.material = config.Material;
         }
     }

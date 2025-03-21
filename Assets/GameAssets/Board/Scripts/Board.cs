@@ -32,11 +32,6 @@ namespace CrazyPawns.GameAssets.Board
 
         private void Start()
         {
-            Init();
-        }
-
-        private void Init()
-        {
             Plane = new Plane(_normal, 0.0f);
             GenerateCells();
             Bound = _config.CheckerBoardSize * _config.CellSize / 2;
@@ -50,12 +45,12 @@ namespace CrazyPawns.GameAssets.Board
             {
                 for (var j = 0; j < boardSize; j++)
                 {
-                    var cell = _cellPool.Spawn(new CellConfig((i + j) % 2 == 0 ? _blackCellMaterial : _whiteCellMaterial));
                     var xPos = CalcPos(i);
                     var zPos = CalcPos(j);
-                    cell.transform.position = new Vector3(xPos, 0.0f, zPos);
+                    var position = new Vector3(xPos, 0.0f, zPos);
+                    var cellConfig = new CellConfig(transform, position, (i + j) % 2 == 0 ? _blackCellMaterial : _whiteCellMaterial);
+                    var cell = _cellPool.Spawn(cellConfig);
                     CellsPositions.Add(cell.transform.position);
-                    cell.transform.parent = transform;
                     _cells[i,j] = cell;
                 }
             }
