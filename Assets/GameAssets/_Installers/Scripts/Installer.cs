@@ -1,5 +1,6 @@
 using CrazyPawns.GameAssets.Board;
 using CrazyPawns.GameAssets.Cell;
+using CrazyPawns.GameAssets.Line;
 using CrazyPawns.GameAssets.Pawn;
 using CrazyPawns.GameAssets.UI;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace CrazyPawn.GameAssets.Installers
         private Pawn _pawn;
 
         [SerializeField]
+        private Line _line;
+
+        [SerializeField]
         private ClickHandler _clickHandler;
 
         public override void InstallBindings()
@@ -31,6 +35,7 @@ namespace CrazyPawn.GameAssets.Installers
             Container.BindMemoryPool<Cell, CellPool>().FromComponentInNewPrefab(_cell);
             Container.BindInterfacesAndSelfTo<PawnController>().FromComponentInNewPrefab(_pawnController).AsSingle().NonLazy();
             Container.BindMemoryPool<Pawn, PawnPool>().FromComponentInNewPrefab(_pawn);
+            Container.BindMemoryPool<Line, LinePool>().FromComponentInNewPrefab(_line);
             Container.BindInterfacesAndSelfTo<ClickHandler>().FromComponentInNewPrefab(_clickHandler).AsSingle().NonLazy();
         }
     }

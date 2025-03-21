@@ -1,5 +1,6 @@
 using CrazyPawns.GameAssets.UI;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -8,6 +9,7 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
     public class Socket : MonoBehaviour
     {
         public event Action<Socket> OnSelect;
+        public event Action<Socket> OnConnect;
 
         [Inject]
         private ClickHandler _clickHandler;
@@ -25,6 +27,7 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
         private Material _availableMaterial;
 
         private bool _canBeDeleted = false;
+        private bool _waitConnection = false;
 
         public bool CanBeDeleted
         {
@@ -41,12 +44,23 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
 
         public void Reinitialize() => CanBeDeleted = false;
 
-        public void Highlight(bool highlight) => _meshRenderer.material = highlight ? _availableMaterial : _defaultMaterial;
+        public List<Socket> ConnectedSockets { get; set; } = new();
+
+        public void Highlight(bool highlight)
+        {
+            _meshRenderer.material = highlight ? _availableMaterial : _defaultMaterial;
+            _waitConnection = highlight;
+        }
 
         private void ChangeMaterial() => _meshRenderer.material = _canBeDeleted ? _deleteMaterial : _defaultMaterial;
 
         private void OnMouseUp()
         {
+            if (_waitConnection)
+            {
+                OnConnect?.Invoke(this);
+            }
+
             if (!_clickHandler.IsActive)
             {
                 _clickHandler.ActivateButton();

@@ -10,6 +10,7 @@ namespace CrazyPawns.GameAssets.Pawn
         public event Action<Pawn, float> OnMove;
         public event Action<Pawn> OnDragEnd;
         public event Action<Pawn, Socket.Socket> OnSocketSelected;
+        public event Action<Pawn, Socket.Socket> OnSocketConnected;
 
         [SerializeField]
         private PawnMoveDetector _moveDetector;
@@ -41,6 +42,8 @@ namespace CrazyPawns.GameAssets.Pawn
             }
         }
 
+        public IReadOnlyList<Socket.Socket> Sockets => _sockets; 
+
         public void Reinitialize(PawnConfig config)
         {
             _moveDetector.OnMove += Move;
@@ -50,6 +53,7 @@ namespace CrazyPawns.GameAssets.Pawn
             {
                 socket.Reinitialize();
                 socket.OnSelect += SocketSelected;
+                socket.OnConnect += SocketConnected;
             }
         }
 
@@ -65,6 +69,8 @@ namespace CrazyPawns.GameAssets.Pawn
 
         private void SocketSelected(Socket.Socket socket) => OnSocketSelected?.Invoke(this, socket);
 
+        private void SocketConnected(Socket.Socket socket) => OnSocketConnected?.Invoke(this, socket);
+
         public void HighlightSockets(bool highlight) => _sockets.ForEach(socket => socket.Highlight(highlight));
 
         private void OnDestroy()
@@ -72,6 +78,7 @@ namespace CrazyPawns.GameAssets.Pawn
             _moveDetector.OnMove -= Move;
             _moveDetector.OnDragEnd -= DragEnd;
             _sockets.ForEach(socket => socket.OnSelect -= SocketSelected);
+            _sockets.ForEach(socket => socket.OnConnect -= SocketConnected);
         }
     }
 }
