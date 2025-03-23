@@ -82,9 +82,12 @@ namespace CrazyPawns.GameAssets.Pawn
         {
             _moveDetector.OnMove -= MovePawn;
             _moveDetector.OnMoveFinished -= MovePawnEnd;
-            _sockets.ForEach(socket => socket.OnConnectionStarted -= SocketConnectionStarted);
-            _sockets.ForEach(socket => socket.OnConnectionSucceed -= SocketConnectionSucceed);
-            _sockets.ForEach(socket => socket.OnConnectionFinished -= SocketConnectionFinished);
+            foreach (var socket in _sockets)
+            {
+                socket.OnConnectionStarted -= SocketConnectionStarted;
+                socket.OnConnectionSucceed -= SocketConnectionSucceed;
+                socket.OnConnectionFinished -= SocketConnectionFinished;
+            }
         }
     }
 }
