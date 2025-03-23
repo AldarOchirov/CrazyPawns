@@ -1,5 +1,6 @@
 using CrazyPawns.GameAssets.Board;
 using CrazyPawns.GameAssets.Cell;
+using CrazyPawns.GameAssets.Common;
 using CrazyPawns.GameAssets.Line;
 using CrazyPawns.GameAssets.Pawn;
 using CrazyPawns.GameAssets.UI;
@@ -37,6 +38,7 @@ namespace CrazyPawn.GameAssets.Installers
             Container.BindMemoryPool<Pawn, PawnPool>().FromComponentInNewPrefab(_pawn);
             Container.BindMemoryPool<Line, LinePool>().FromComponentInNewPrefab(_line);
             Container.BindInterfacesAndSelfTo<ClickHandler>().FromComponentInNewPrefab(_clickHandler).AsSingle().NonLazy();
+            Container.Bind<CameraController>().FromComponentInHierarchy().AsCached();
         }
     }
 }

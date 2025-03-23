@@ -1,3 +1,4 @@
+using CrazyPawns.GameAssets.Common;
 using CrazyPawns.GameAssets.UI;
 using System;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
 
         [Inject]
         private ClickHandler _clickHandler;
+
+        [Inject]
+        private CameraController _cameraController;
 
         [SerializeField]
         private MeshRenderer _meshRenderer;
@@ -56,7 +60,11 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
 
         private void ConnectionFinished() => OnConnectionFinished?.Invoke();
 
-        private void OnMouseDown() => _downClickTime = Time.time;
+        private void OnMouseDown()
+        {
+            _cameraController.IgnoreClicks = true;
+            _downClickTime = Time.time;
+        }
 
         private void OnMouseDrag()
         {
@@ -91,6 +99,8 @@ namespace CrazyPawns.GameAssets.Pawn.Socket
                     OnConnectionStarted?.Invoke(this);
                 }
             }
+
+            _cameraController.IgnoreClicks = false;
         }
     }
 }

@@ -1,5 +1,7 @@
+using CrazyPawns.GameAssets.Common;
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace CrazyPawns.GameAssets.Pawn
 {
@@ -8,8 +10,19 @@ namespace CrazyPawns.GameAssets.Pawn
         public event Action OnMove;
         public event Action OnMoveFinished;
 
-        private void OnMouseDrag() => OnMove?.Invoke();
+        [Inject]
+        private CameraController _cameraController;
 
-        private void OnMouseUp() => OnMoveFinished?.Invoke();
+        private void OnMouseDrag()
+        {
+            _cameraController.IgnoreClicks = true;
+            OnMove?.Invoke();
+        }
+
+        private void OnMouseUp()
+        {
+            _cameraController.IgnoreClicks = false;
+            OnMoveFinished?.Invoke();
+        }
     }
 }

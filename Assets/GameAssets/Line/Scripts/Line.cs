@@ -14,6 +14,7 @@ namespace CrazyPawns.GameAssets.Line
         public void Reinitialize(LineConfig config)
         {
             _config = config;
+            transform.parent = config.Parent;
             UpdateLinePositions();
         }
 

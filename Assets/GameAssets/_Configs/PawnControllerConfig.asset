@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e68a6394465f9e469884c33e7ca9a2c, type: 3}
   m_Name: PawnControllerConfig
   m_EditorClassIdentifier: 
-  _initialZoneRadius: 3
+  _initialZoneRadius: 10
   _initialPawnCount: 7
   _deleteMaterial: {fileID: 2100000, guid: 854bcfe2fa381404e981b4cafde1e4df, type: 2}
   _activeConnectorMaterial: {fileID: 2100000, guid: 27c0a93bfcbcf4070978f6b70d2766ce,
